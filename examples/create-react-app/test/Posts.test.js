@@ -14,8 +14,24 @@ const localQueries = {
   })
 }
 
+afterEach(() => {
+  jest.restoreAllMocks()
+})
+
 describe('Posts', () => {
-  it('should render successfully', async () => {
+  it('shows "No posts" if 0 posts are returned', async () => {
+    jest.spyOn(localQueries, allPostsQuery).mockImplementation(() => ({
+      allPosts: []
+    }))
+
+    render(<Posts />, {
+      localQueries
+    })
+
+    expect(await screen.findByText('No posts')).toBeTruthy()
+  })
+
+  it('renders the list of posts', async () => {
     render(<Posts />, {
       localQueries
     })
